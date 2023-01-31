@@ -5,8 +5,12 @@
     "description": "Magento PHPUnit Integration",
     "homepage": "http://www.ecomdev.org/shop/code-testing/php-unit-test-suite.html",
     "require": {
+        "php": ">= 8.0",
+        "ext-simplexml": "*",
         "magento-hackathon/magento-composer-installer": "*",
-        "phpunit/phpunit": "^9.5"
+        "phpunit/phpunit": "^9.5",
+        "symfony/yaml": "^6.2",
+        "mikey179/vfsstream": "^1.6"
     },
     "replace": {
         "ivanchepurnyi/ecomdev_phpunit":"*"
