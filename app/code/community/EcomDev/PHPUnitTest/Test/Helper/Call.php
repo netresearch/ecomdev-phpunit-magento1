@@ -54,16 +54,15 @@ class EcomDev_PHPUnitTest_Test_Helper_Call extends EcomDev_PHPUnit_Test_Case
         );
     }
 
-    /**
-     * @expectedException ErrorException
-     * @expectedExceptionMessage Call to undefined function EcomDev_PHPUnitTest_Test_Helper_Call->unknownHelper()
-     */
     public function testCallError()
     {
+        $this->expectException(ErrorException::class);
+        $this->expectExceptionMessage('Call to undefined function EcomDev_PHPUnitTest_Test_Helper_Call->unknownHelper()');
+
         $this->unknownHelper('');
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         EcomDev_PHPUnit_Helper::remove($this->helper);
     }

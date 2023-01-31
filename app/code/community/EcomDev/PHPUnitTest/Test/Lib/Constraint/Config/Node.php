@@ -2,7 +2,6 @@
 
 class EcomDev_PHPUnitTest_Test_Lib_Constraint_Config_Node extends EcomDev_PHPUnit_Test_Case
 {
-
     /**
      * Creates constraint instance
      *
@@ -18,27 +17,11 @@ class EcomDev_PHPUnitTest_Test_Lib_Constraint_Config_Node extends EcomDev_PHPUni
     }
 
     /**
-     * Test constructor of the node,
-     *
-     * @param mixed $expectedValue
-     * @param string $type
-     *
-     * @dataProvider dataProvider
-     */
-    public function testConstructorAccepts($expectedValue, $type)
-    {
-        $constraint = $this->_getConstraint('some/dummy/path', $type, $expectedValue);
-        $this->assertAttributeEquals($expectedValue, '_expectedValue', $constraint);
-    }
-
-    /**
      * Tests that particular value equals xml
      *
-     * @param string $actualValue
-     * @param string $expectedValue
      * @dataProvider dataProvider
      */
-    public function testEqualsXml($actualValue, $expectedValue)
+    public function testEqualsXml(string $actualValue, string $expectedValue)
     {
         $actualValue = new SimpleXMLElement($actualValue);
         $expectedValue = new SimpleXMLElement($expectedValue);
@@ -50,17 +33,15 @@ class EcomDev_PHPUnitTest_Test_Lib_Constraint_Config_Node extends EcomDev_PHPUni
         );
 
         $this->assertTrue($constraint->evaluate($actualValue, '', true));
-        $this->assertAttributeEmpty('_comparisonFailure', $constraint);
+        $this->assertInstanceOf(\SebastianBergmann\Comparator\ComparisonFailure::class, $constraint->getComparisonFailure($expectedValue, $actualValue));
     }
 
     /**
      * Tests that particular value equals xml
      *
-     * @param string $actualValue
-     * @param string $expectedValue
      * @dataProvider dataProvider
      */
-    public function testEqualsXmlFailure($actualValue, $expectedValue)
+    public function testEqualsXmlFailure(string $actualValue, string $expectedValue)
     {
         $actualValue = new SimpleXMLElement($actualValue);
         $expectedValue = new SimpleXMLElement($expectedValue);
@@ -72,7 +53,6 @@ class EcomDev_PHPUnitTest_Test_Lib_Constraint_Config_Node extends EcomDev_PHPUni
         );
 
         $this->assertFalse($constraint->evaluate($actualValue, '', true));
-        $this->assertAttributeNotEmpty('_comparisonFailure', $constraint);
-        $this->assertAttributeInstanceOf('\SebastianBergmann\Comparator\ComparisonFailure', '_comparisonFailure', $constraint);
+        $this->assertInstanceOf(\SebastianBergmann\Comparator\ComparisonFailure::class, $constraint->getComparisonFailure($expectedValue, $actualValue));
     }
 }

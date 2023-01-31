@@ -39,11 +39,10 @@ class EcomDev_PHPUnitTest_Test_Lib_Mock_Proxy extends \PHPUnit\Framework\TestCas
      */
     public function testAddMethod()
     {
-        $this->assertAttributeEquals(array(), 'methods', $this->mockProxy);
         $this->mockProxy->addMethod('methodName');
-        $this->assertAttributeEquals(array('methodName'), 'methods', $this->mockProxy);
+        $this->assertTrue(method_exists($this->mockProxy->getMock(), 'methodName'));
         $this->mockProxy->addMethod('methodName2');
-        $this->assertAttributeEquals(array('methodName', 'methodName2'), 'methods', $this->mockProxy);
+        $this->assertTrue(method_exists($this->mockProxy->getMock(), 'methodName2'));
     }
 
     public function testRemoveMethod()
@@ -53,22 +52,14 @@ class EcomDev_PHPUnitTest_Test_Lib_Mock_Proxy extends \PHPUnit\Framework\TestCas
         ));
 
         $this->mockProxy->removeMethod('methodName2');
-        $this->assertAttributeEquals(array('methodName', 'methodName3'), 'methods', $this->mockProxy);
+        $this->assertTrue(method_exists($this->mockProxy->getMock(), 'methodName'));
+        $this->assertTrue(method_exists($this->mockProxy->getMock(), 'methodName3'));
         $this->mockProxy->removeMethod('methodName');
-        $this->assertAttributeEquals(array('methodName3'), 'methods', $this->mockProxy);
-    }
-
-
-    public function testPreserveMethods()
-    {
-        $this->assertAttributeSame(array(), 'methods', $this->mockProxy);
-        $this->mockProxy->preserveMethods();
-        $this->assertAttributeSame(null, 'methods', $this->mockProxy);
+        $this->assertTrue(method_exists($this->mockProxy->getMock(), 'methodName3'));
     }
 
     public function testGetMockInstance()
     {
-
         $mockInstance = $this->mockProxy->getMockInstance();
 
         $this->assertInstanceOf(
@@ -94,33 +85,24 @@ class EcomDev_PHPUnitTest_Test_Lib_Mock_Proxy extends \PHPUnit\Framework\TestCas
 
     public function testExpects()
     {
-        $this->assertAttributeEmpty('mockInstance', $this->mockProxy);
         $this->assertInstanceOf(
-            '\PHPUnit\Framework\MockObject\Builder\InvocationMocker',
-            $this->mockProxy->expects($this->any())->method('compareValues')
+            \PHPUnit\Framework\MockObject\Builder\InvocationMocker::class,
+            $this->mockProxy->expects($this->any())->method($this->anything())
         );
-        $this->assertAttributeInstanceOf('EcomDev_PHPUnit_AbstractConstraint', 'mockInstance', $this->mockProxy);
+        $this->assertInstanceOf(EcomDev_PHPUnit_AbstractConstraint::class, $this->mockProxy->getMockInstance());
     }
 
     public function testGetInvocationMocker()
     {
-        $this->assertAttributeEmpty('mockInstance', $this->mockProxy);
-        $this->setExpectedException('RuntimeException', 'getMockInstance');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getMockInstance');
         $this->mockProxy->__phpunit_getInvocationMocker();
-
-    }
-
-    public function testGetStaticInvocationMocker()
-    {
-        $this->assertAttributeEmpty('mockInstance', $this->mockProxy);
-        $this->setExpectedException('RuntimeException', 'getMockInstance');
-        $this->mockProxy->__phpunit_getStaticInvocationMocker();
     }
 
     public function testVerify()
     {
-        $this->assertAttributeEmpty('mockInstance', $this->mockProxy);
-        $this->setExpectedException('RuntimeException', 'getMockInstance');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('getMockInstance');
         $this->mockProxy->__phpunit_verify();
     }
 

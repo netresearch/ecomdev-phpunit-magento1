@@ -367,8 +367,8 @@ abstract class EcomDev_PHPUnit_Test_Case extends \PHPUnit\Framework\TestCase
      */
     protected function expected($firstArgument = null)
     {
-        if ($firstArgument === 'auto' && $this->readAttribute($this, 'dataName')) {
-            $arguments = $this->readAttribute($this, 'dataName');
+        if ($firstArgument === 'auto' && $this->dataName()) {
+            $arguments = $this->dataName();
         } elseif (!is_array($firstArgument)) {
             $arguments = func_get_args();
         } else {
@@ -534,10 +534,9 @@ abstract class EcomDev_PHPUnit_Test_Case extends \PHPUnit\Framework\TestCase
      * Returns class name by grouped class alias
      *
      * @param string $type block/model/helper/resource_model
-     * @param string $classAlias
      * @return string
      */
-    protected function getGroupedClassName($type, $classAlias)
+    protected function getGroupedClassName(string $type, string $classAlias): string
     {
         return TestUtil::getGroupedClassName($type, $classAlias);
     }

@@ -34,7 +34,7 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
     {
         // Retrieve existing helpers and store them for future revert
         $this->initializedHelpers = EcomDev_Utils_Reflection::getRestrictedPropertyValue(
-            'EcomDev_PHPUnit_Helper',
+            EcomDev_PHPUnit_Helper::class,
             'helpers'
         );
 
@@ -46,23 +46,21 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
      */
     protected function resetHelpers()
     {
-        EcomDev_Utils_Reflection::setRestrictedPropertyValue('EcomDev_PHPUnit_Helper', 'helpers', array());
+        EcomDev_Utils_Reflection::setRestrictedPropertyValue(EcomDev_PHPUnit_Helper::class, 'helpers', array());
     }
 
     /**
      * Returns amount of helpers for test
      *
-     * @param int $count
-     * @param bool $setThem
      * @return EcomDev_PHPUnit_HelperInterface[]|\PHPUnit\Framework\MockObject\MockObject[]
      */
-    protected function getHelpersForTest($count = 2, $setThem = false)
+    protected function getHelpersForTest(int $count = 2, bool $setThem = false)
     {
         $result = array();
 
         $helperInterfaces = array(
-            true => 'EcomDev_PHPUnit_HelperInterface',
-            false => 'EcomDev_PHPUnit_Helper_ListenerInterface'
+            true => EcomDev_PHPUnit_HelperInterface::class,
+            false => EcomDev_PHPUnit_Helper_ListenerInterface::class,
         );
 
         for ($i = 0; $i < $count; $i ++) {
@@ -73,7 +71,7 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
         }
 
         if ($setThem) {
-            EcomDev_Utils_Reflection::setRestrictedPropertyValue('EcomDev_PHPUnit_Helper', 'helpers', $result);
+            EcomDev_Utils_Reflection::setRestrictedPropertyValue(EcomDev_PHPUnit_Helper::class, 'helpers', $result);
         }
 
         return $result;
@@ -81,9 +79,8 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
 
     /**
      * Tests regular helper addition
-     *
      */
-    public function testAdd()
+    public function testAdd(): void
     {
         $helpers = $this->getHelpersForTest(3);
 
@@ -91,14 +88,13 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
         Helper::add($helpers[1]);
         Helper::add($helpers[2]);
 
-        $this->assertAttributeSame($helpers, 'helpers', 'EcomDev_PHPUnit_Helper');
+        $this->assertSame($helpers, Helper::get());
     }
 
     /**
      * Tests addition of helpers to static property
-     *
      */
-    public function testAddOrdered()
+    public function testAddOrdered(): void
     {
         $helpers = $this->getHelpersForTest(6);
 
@@ -106,41 +102,26 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
         Helper::add($helpers[1]);
         Helper::add($helpers[2], array('before' => $helpers[1]));
 
-        $this->assertAttributeSame(
-            array($helpers[0], $helpers[2], $helpers[1]),
-            'helpers', 'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array($helpers[0], $helpers[2], $helpers[1]), Helper::get());
 
         Helper::add($helpers[4], array('after' => $helpers[2]));
 
-        $this->assertAttributeSame(
-            array($helpers[0], $helpers[2], $helpers[4], $helpers[1]),
-            'helpers', 'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array($helpers[0], $helpers[2], $helpers[4], $helpers[1]), Helper::get());
 
         Helper::add($helpers[3], array('before' => 'Test_Helper_Name2'));
 
-        $this->assertAttributeSame(
-            array($helpers[0], $helpers[3], $helpers[2], $helpers[4], $helpers[1]),
-            'helpers', 'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array($helpers[0], $helpers[3], $helpers[2], $helpers[4], $helpers[1]), Helper::get());
 
         Helper::add($helpers[5], array('after' => 'Test_Helper_Name3'));
 
-        $this->assertAttributeSame(
-            array($helpers[0], $helpers[3], $helpers[5], $helpers[2], $helpers[4], $helpers[1]),
-            'helpers', 'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array($helpers[0], $helpers[3], $helpers[5], $helpers[2], $helpers[4], $helpers[1]), Helper::get());
     }
 
-    /**
-     * Test wrong helper position
-     *
-     * @expectedException RuntimeException
-     * @expectedExceptionMessage Unknown position specified
-     */
     public function testAddWrongPosition()
     {
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Unknown position specified');
+
         $helper = current($this->getHelpersForTest(1));
         Helper::add($helper, array('unknown' => 'position'));
     }
@@ -152,68 +133,43 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
     {
         $helpers = $this->getHelpersForTest(5, true);
         // Check helpers are exists before editing
-        $this->assertAttributeSame($helpers, 'helpers', 'EcomDev_PHPUnit_Helper');
+        $this->assertSame($helpers, Helper::get());
 
         Helper::remove($helpers[1]);
 
-        $this->assertAttributeSame(
-            array($helpers[0], $helpers[2], $helpers[3], $helpers[4]),
-            'helpers',
-            'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array($helpers[0], $helpers[2], $helpers[3], $helpers[4]), Helper::get());
 
         Helper::remove($helpers[0]);
 
-        $this->assertAttributeSame(
-            array($helpers[2], $helpers[3], $helpers[4]),
-            'helpers',
-            'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array($helpers[2], $helpers[3], $helpers[4]), Helper::get());
 
         Helper::remove($helpers[4]);
 
-        $this->assertAttributeSame(
-            array($helpers[2], $helpers[3]),
-            'helpers',
-            'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array($helpers[2], $helpers[3]), Helper::get());
 
         Helper::remove($helpers[2]);
         Helper::remove($helpers[3]);
 
-        $this->assertAttributeSame(
-            array(),
-            'helpers',
-            'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array(), Helper::get());
     }
 
     /**
      * Tests removal of each helper
-     *
      */
     public function testRemoveByClassName()
     {
         $helpers = $this->getHelpersForTest(5, true);
         // Check helpers are exists before editing
-        $this->assertAttributeSame($helpers, 'helpers', 'EcomDev_PHPUnit_Helper');
+        $this->assertSame($helpers, Helper::get());
         Helper::add($helpers[4]); // Added two times
 
         Helper::removeByClass('Test_Helper_Name2');
 
-        $this->assertAttributeSame(
-            array($helpers[0], $helpers[1], $helpers[3], $helpers[4], $helpers[4]),
-            'helpers',
-            'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array($helpers[0], $helpers[1], $helpers[3], $helpers[4], $helpers[4]), Helper::get());
 
         Helper::removeByClass('Test_Helper_Name4');
 
-        $this->assertAttributeSame(
-            array($helpers[0], $helpers[1], $helpers[3]),
-            'helpers',
-            'EcomDev_PHPUnit_Helper'
-        );
+        $this->assertSame(array($helpers[0], $helpers[1], $helpers[3]), Helper::get());
     }
 
     /**
@@ -287,7 +243,6 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
 
     /**
      * Tests invoking of helper by action
-     *
      */
     public function testInvokeArgs()
     {
@@ -297,13 +252,13 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
         $this->assertSame('firstName_one_two', Helper::invokeArgs('firstName', array('one', 'two')));
         $this->assertSame('firstName_one_two_three', Helper::invokeArgs('firstName', array('one', 'two', 'three')));
 
-        $this->setExpectedException('RuntimeException', 'Cannot find a helper for action "unknownName"');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Cannot find a helper for action "unknownName"');
         Helper::invokeArgs('unknownName', array('argument'));
     }
 
     /**
      * Tests invoking of helper by action
-     *
      */
     public function testInvoke()
     {
@@ -316,7 +271,6 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
 
     /**
      * Tests method for checking action existence in the helper
-     *
      */
     public function testHas()
     {
@@ -357,18 +311,17 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
     /**
      * Test that when set up is invoked,
      * test helpers that support setUp method invoked as well
-     *
      */
     public function testSetUp()
     {
         $helpers = $this->getHelpersForTest(4, true);
 
         $helpers[0]->expects($this->never())
-            ->method('setUp');
+            ->method($this->anything());
         $helpers[1]->expects($this->once())
             ->method('setUp');
         $helpers[2]->expects($this->never())
-            ->method('setUp');
+            ->method($this->anything());
         $helpers[3]->expects($this->once())
             ->method('setUp');
 
@@ -376,31 +329,30 @@ class EcomDev_PHPUnitTest_Test_Lib_Helper extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Test that when set up is invoked,
-     * test helpers that support setUp method invoked as well
-     *
+     * Test that when tear down is invoked,
+     * test helpers that support tearDown method invoked as well
      */
     public function testTearDown()
     {
         $helpers = $this->getHelpersForTest(4, true);
 
         $helpers[0]->expects($this->never())
-            ->method('tearDown');
+            ->method($this->anything());
         $helpers[1]->expects($this->once())
             ->method('tearDown');
         $helpers[2]->expects($this->never())
-            ->method('tearDown');
+            ->method($this->anything());
         $helpers[3]->expects($this->once())
             ->method('tearDown');
 
         EcomDev_PHPUnit_Helper::tearDown();
     }
 
-    protected function tearDown()
+    protected function tearDown(): void
     {
         // Revert helpers in helper class
         EcomDev_Utils_Reflection::setRestrictedPropertyValue(
-            'EcomDev_PHPUnit_Helper',
+            EcomDev_PHPUnit_Helper::class,
             'helpers',
             $this->initializedHelpers
         );

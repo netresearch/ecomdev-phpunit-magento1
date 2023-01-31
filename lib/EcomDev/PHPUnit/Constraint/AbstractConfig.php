@@ -66,7 +66,7 @@ abstract class EcomDev_PHPUnit_Constraint_AbstractConfig
      * (non-PHPdoc)
      * @see EcomDev_PHPUnit_ConstraintAbstract::evaluate()
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, $description = '', $returnResult = false): bool|null
     {
         if ($other === false) {
             // If node was not found, than evaluation fails

@@ -19,19 +19,15 @@ class EcomDev_PHPUnit_Helper
      * If $position is specified, it will use value
      * from before or after key as related helper
      *
-     * @param EcomDev_PHPUnit_HelperInterface $helper
-     * @param bool|array                       $position
-     *
      * @throws RuntimeException
      */
-    public static function add(EcomDev_PHPUnit_HelperInterface $helper, $position = false)
+    public static function add(EcomDev_PHPUnit_HelperInterface $helper, bool|array $position = false)
     {
         if ($position === false) {
             self::$helpers[] = $helper;
         } elseif (isset($position['after']) || isset($position['before'])) {
             $isBefore = isset($position['before']);
             $relatedHelper = $isBefore ? $position['before'] : $position['after'];
-
             if (is_string($relatedHelper)) {
                 // Retrieving of helper by class name
                 $relatedHelper = current(self::getHelpersByClass($relatedHelper));
@@ -41,9 +37,9 @@ class EcomDev_PHPUnit_Helper
             if ($helperPosition !== false) {
                 array_splice(
                     self::$helpers,
-                    $helperPosition + ($isBefore ? 0 : 1),
-                    null,
-                    array($helper)
+                    $helperPosition,
+                    1,
+                    $isBefore ? [$helper, $relatedHelper] : [$relatedHelper, $helper],
                 );
             }
         } else {
@@ -93,6 +89,11 @@ class EcomDev_PHPUnit_Helper
         }
 
         return false;
+    }
+
+    public static function get()
+    {
+        return self::$helpers;
     }
 
     /**

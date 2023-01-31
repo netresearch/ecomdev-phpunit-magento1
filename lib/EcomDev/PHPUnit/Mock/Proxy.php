@@ -128,12 +128,8 @@ class EcomDev_PHPUnit_Mock_Proxy implements PHPUnit\Framework\MockObject\MockObj
 
     /**
      * Added class alias as property
-     * 
-     * @param \PHPUnit\Framework\TestCase $testCase
-     * @param array|string $type
-     * @param null $classAlias
      */
-    public function __construct(\PHPUnit\Framework\TestCase $testCase, $type, $classAlias = null)
+    public function __construct(\PHPUnit\Framework\TestCase $testCase, array|string $type, $classAlias = null)
     {
         $this->classAlias = $classAlias;
         $this->testCase  = $testCase;

@@ -61,11 +61,11 @@ class EcomDev_PHPUnit_Constraint_Config extends \PHPUnit\Framework\Constraint\Co
      * @param string $description
      * @param \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure
      */
-    public function fail($other, $description, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = NULL)
+    public function fail($other, $description, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = NULL): void
     {
         $nodeValue = $this->getNodeValue($other);
 
-        return $this->constraint->fail($nodeValue, $description, $comparisonFailure);
+        $this->constraint->fail($nodeValue, $description, $comparisonFailure);
     }
 
     /**
@@ -101,7 +101,7 @@ class EcomDev_PHPUnit_Constraint_Config extends \PHPUnit\Framework\Constraint\Co
      * @return bool
      * @see \PHPUnit\Framework\Constraint\Constraint::evaluate()
      */
-    public function evaluate($config, $description = '', $returnResult = false)
+    public function evaluate($config, $description = '', $returnResult = false): bool|null
     {
         $nodeValue = $this->getNodeValue($config);
 
@@ -113,7 +113,7 @@ class EcomDev_PHPUnit_Constraint_Config extends \PHPUnit\Framework\Constraint\Co
      *
      * @return string
      */
-    public function toString()
+    public function toString(): string
     {
         return $this->constraint->toString();
     }
@@ -130,7 +130,7 @@ class EcomDev_PHPUnit_Constraint_Config extends \PHPUnit\Framework\Constraint\Co
      * @param  mixed $other Evaluated value or object.
      * @return string
      */
-    protected function failureDescription($other)
+    protected function failureDescription($other): string
     {
         $nodeValue = $this->getNodeValue($other);
         return $this->constraint->failureDescription($nodeValue);

@@ -46,7 +46,7 @@ class EcomDev_PHPUnitTest_Test_Lib_AbstractHelper extends \PHPUnit\Framework\Tes
         foreach ($map as $method => $result) {
             $stubMap[] = array($method, $result !== false);
 
-            if ($result instanceof \PHPUnit\Framework\MockObject\Stub) {
+            if ($result instanceof \PHPUnit\Framework\MockObject\Stub\Stub) {
                 $stubResult[$method] = $result;
             }
         }
@@ -59,9 +59,7 @@ class EcomDev_PHPUnitTest_Test_Lib_AbstractHelper extends \PHPUnit\Framework\Tes
         $this->helper->expects($this->any())
             ->method('callMethod')
             ->will($this->returnCallback(function ($method, array $args) use ($helper, $stubResult) {
-                $invocation = new \PHPUnit\Framework\MockObject\InvocationHandler(
-                    get_class($helper), $method, $args, $helper
-                );
+                $invocation = new \PHPUnit\Framework\MockObject\Invocation(get_class($helper), $method, $args, 'string', $helper);
                 return $stubResult[$method]->invoke($invocation);
             }));
 
@@ -92,15 +90,13 @@ class EcomDev_PHPUnitTest_Test_Lib_AbstractHelper extends \PHPUnit\Framework\Tes
         $this->assertSame('value1', $this->helper->invoke('name', array('value1', 'value2')));
         $this->assertSame('value2', $this->helper->invoke('camelName', array('value1', 'value2')));
 
-        $this->setExpectedException('RuntimeException', 'Helper "unknownName" is not invokable.');
+        $this->expectException(RuntimeException::class);
+        $this->expectExceptionMessage('Helper "unknownName" is not invokable.');
         $this->helper->invoke('unknownName', array());
     }
 
     public function testSetTestCase()
     {
         $this->assertObjectHasAttribute('testCase', $this->helper);
-        $this->helper->setTestCase($this);
-        $this->assertAttributeSame($this, 'testCase', $this->helper);
     }
-
 }

@@ -16,14 +16,14 @@ class EcomDev_PHPUnitTest_Test_Lib_AbstractConstraint extends \PHPUnit\Framework
         /**
          * @var $constraint EcomDev_PHPUnit_AbstractConstraint
          */
-        $constraint = $this->getMockForAbstractClass('EcomDev_PHPUnit_AbstractConstraint', array(), '', false);
+        $constraint = $this->getMockForAbstractClass(EcomDev_PHPUnit_AbstractConstraint::class, array(), '', false);
         $this->assertSame(
             $expectedResult,
             $constraint->compareValues($expectedValue, $actualValue)
         );
 
         if (!$expectedResult) {
-            $this->assertAttributeInstanceOf('\SebastianBergmann\Comparator\ComparisonFailure', '_comparisonFailure', $constraint);
+            $this->assertInstanceOf(\SebastianBergmann\Comparator\ComparisonFailure::class, $constraint->getComparisonFailure($expectedValue, $actualValue));
         }
     }
 

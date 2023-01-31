@@ -562,7 +562,7 @@ class EcomDev_PHPUnit_Test_Case_Util
                 'Call to undefined function %s%s%s()',
                 $previousCall['class'],
                 $previousCall['type'],
-                $previousCall['function']
+                $method
             ),
             0,
             E_USER_ERROR,

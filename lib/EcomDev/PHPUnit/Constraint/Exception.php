@@ -39,7 +39,7 @@ class EcomDev_PHPUnit_Constraint_Exception extends \PHPUnit\Framework\AssertionF
         parent::__construct($description, $diff);
     }
 
-    public function toString()
+    public function toString(): string
     {
         $result = parent::toString();
 

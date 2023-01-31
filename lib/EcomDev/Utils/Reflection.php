@@ -168,7 +168,7 @@ class EcomDev_Utils_Reflection
         }
         // In case of invalid argument
         else {
-            throw new InvalidArgumentException('$object should be a valid class name or object instance');
+            throw new InvalidArgumentException("$object should be a valid class name or object instance");
         }
     }
 

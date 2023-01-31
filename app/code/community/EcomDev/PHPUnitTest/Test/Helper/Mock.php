@@ -20,55 +20,40 @@ class EcomDev_PHPUnitTest_Test_Helper_Mock extends EcomDev_PHPUnit_Test_Case
 {
     public function testMockClassAlias()
     {
-        $mock = $this->mockClassAlias('model', 'catalog/product',
-            array('getId'),
-            array(array('entity_id' => 1))
-        );
+        $mock = $this->mockClassAlias('model', 'catalog/product', ['getId'], [['entity_id' => 1]]);
 
-        $this->assertInstanceOf('EcomDev_PHPUnit_Mock_Proxy', $mock);
-        $this->assertAttributeEquals($this->getGroupedClassName('model', 'catalog/product'), 'type', $mock);
-        $this->assertAttributeContains('getId', 'methods', $mock);
-        $this->assertAttributeContains(array('entity_id' => 1), 'constructorArgs', $mock);
+        $this->assertInstanceOf(EcomDev_PHPUnit_Mock_Proxy::class, $mock);
+        $this->assertStringContainsString($this->getGroupedClassName('model', 'catalog/product'), $mock->getMockClass());
+        $this->assertTrue(method_exists($mock->getMock(), 'getId'));
+        $this->assertEquals(1, $mock->getMock()->getEntityId());
     }
 
     public function testModelMock()
     {
-        $mock = $this->mockModel('catalog/product',
-            array('getId'),
-            array(array('entity_id' => 1))
-        );
+        $mock = $this->mockModel('catalog/product', ['getId'], [['entity_id' => 1]]);
 
-        $this->assertInstanceOf('EcomDev_PHPUnit_Mock_Proxy', $mock);
-        $this->assertAttributeEquals($this->getGroupedClassName('model', 'catalog/product'), 'type', $mock);
-        $this->assertAttributeContains('getId', 'methods', $mock);
-        $this->assertAttributeContains(array('entity_id' => 1), 'constructorArgs', $mock);
+        $this->assertInstanceOf(EcomDev_PHPUnit_Mock_Proxy::class, $mock);
+        $this->assertStringContainsString($this->getGroupedClassName('model', 'catalog/product'),  $mock->getMockClass());
+        $this->assertTrue(method_exists($mock->getMock(), 'getId'));
+        $this->assertEquals(1, $mock->getMock()->getEntityId());
     }
 
     public function testBlockMock()
     {
-        $mock = $this->mockBlock('catalog/product_view',
-            array('getTemplate'),
-            array(array('product_id' => 1))
-        );
+        $mock = $this->mockBlock('catalog/product_view', ['getTemplate'], [['product_id' => 1]]);
 
-        $this->assertInstanceOf('EcomDev_PHPUnit_Mock_Proxy', $mock);
-        $this->assertAttributeEquals($this->getGroupedClassName('block', 'catalog/product_view'), 'type', $mock);
-        $this->assertAttributeContains('getTemplate', 'methods', $mock);
-        $this->assertAttributeContains(array('product_id' => 1), 'constructorArgs', $mock);
+        $this->assertInstanceOf(EcomDev_PHPUnit_Mock_Proxy::class, $mock);
+        $this->assertStringContainsString($this->getGroupedClassName('block', 'catalog/product_view'), $mock->getMockClass());
+        $this->assertTrue(method_exists($mock->getMock(), 'getTemplate'));
+        $this->assertEquals(1, $mock->getMock()->getProductId());
     }
 
     public function testHelperMock()
     {
-        $mock = $this->mockBlock('catalog/category',
-            array('getStoreCategories'),
-            array('some_value')
-        );
+        $mock = $this->mockHelper('catalog/category', ['getStoreCategories']);
 
-        $this->assertInstanceOf('EcomDev_PHPUnit_Mock_Proxy', $mock);
-        $this->assertAttributeEquals($this->getGroupedClassName('block', 'catalog/category'), 'type', $mock);
-        $this->assertAttributeContains('getStoreCategories', 'methods', $mock);
-        $this->assertAttributeContains('some_value', 'constructorArgs', $mock);
+        $this->assertInstanceOf(EcomDev_PHPUnit_Mock_Proxy::class, $mock);
+        $this->assertStringContainsString($this->getGroupedClassName('helper', 'catalog/category'), $mock->getMockClass());
+        $this->assertTrue(method_exists($mock->getMock(), 'getStoreCategories'));
     }
-
-
 }

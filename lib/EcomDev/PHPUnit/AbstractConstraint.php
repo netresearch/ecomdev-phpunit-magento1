@@ -210,7 +210,7 @@ abstract class EcomDev_PHPUnit_AbstractConstraint
      * @param  bool $returnResult Whether to return a result or throw an exception
      * @return mixed
      */
-    public function evaluate($other, $description = '', $returnResult = false)
+    public function evaluate($other, $description = '', $returnResult = false): bool|null
     {
         $success = false;
 
@@ -225,6 +225,8 @@ abstract class EcomDev_PHPUnit_AbstractConstraint
         if (!$success) {
             $this->fail($other, $description);
         }
+
+        return null;
     }
 
     /**
@@ -233,7 +235,7 @@ abstract class EcomDev_PHPUnit_AbstractConstraint
      * (non-PHPdoc)
      * @see \PHPUnit\Framework\Constraint\Constraint::fail()
      */
-    public function fail($other, $description, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = NULL)
+    public function fail($other, $description, \SebastianBergmann\Comparator\ComparisonFailure $comparisonFailure = NULL): void
     {
         $failureDescription = sprintf('Failed asserting that %s', $this->failureDescription($other));
 
@@ -256,7 +258,7 @@ abstract class EcomDev_PHPUnit_AbstractConstraint
      * @param mixed $other
      * @return string
      */
-    protected function failureDescription($other)
+    protected function failureDescription($other): string
     {
         if (method_exists($this, 'customFailureDescription')) {
             return $this->customFailureDescription($other);
@@ -296,7 +298,7 @@ abstract class EcomDev_PHPUnit_AbstractConstraint
      * (non-PHPdoc)
      * @see \PHPUnit\Framework\SelfDescribing::toString()
      */
-    public function toString()
+    public function toString(): string
     {
         return $this->callProtectedByType('text');
     }
@@ -305,9 +307,8 @@ abstract class EcomDev_PHPUnit_AbstractConstraint
      * Exports value as string
      *
      * @param mixed $value
-     * @return string
      */
-    public function exportAsString($value)
+    public function exportAsString($value): string
     {
         if (is_array($value) && preg_match('/^\d+$/', implode('', array_keys($value)))) {
             $stringValue = '';
