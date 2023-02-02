@@ -2065,30 +2065,24 @@ abstract class EcomDev_PHPUnit_Test_Case_Controller extends EcomDev_PHPUnit_Test
     /**
      * Creates admin user session stub for testing adminhtml controllers
      *
-     * @param array $aclResources list of allowed ACL resources for user,
-     *                            if null then it is super admin
+     * @param array<string>|null $aclResources list of allowed ACL resources for user, if null then it is super admin
      * @param int $userId fake id of the admin user, you can use different one if it is required for your tests
-     * @return EcomDev_PHPUnit_Test_Case_Controller
      */
-    protected function mockAdminUserSession(array $aclResources = null, $userId = 1)
+    protected function mockAdminUserSession(array|null $aclResources = null, int $userId = 1): EcomDev_PHPUnit_Test_Case_Controller
     {
         $adminSessionMock = $this->getModelMock(
             'admin/session',
-            array(
-                  'init',
-                  'getUser',
-                  'isLoggedIn',
-                  'isAllowed')
+            ['init', 'getUser', 'isLoggedIn', 'isAllowed'],
         );
 
         $adminUserMock = $this->getModelMock(
             'admin/user',
-            array('login', 'getId', 'save', 'authenticate', 'getRole')
+            ['login', 'getId', 'save', 'authenticate', 'getRole'],
         );
 
         $adminRoleMock = $this->getModelMock(
             'admin/roles',
-            array('getGwsIsAll', 'getGwsStores', 'getGwsStoreGroups', 'getGwsRelevantWebsites')
+            ['getGwsIsAll', 'getGwsStores', 'getGwsStoreGroups', 'getGwsRelevantWebsites'],
         );
 
         $adminRoleMock->expects($this->any())
@@ -2126,24 +2120,23 @@ abstract class EcomDev_PHPUnit_Test_Case_Controller extends EcomDev_PHPUnit_Test
         // Simple isAllowed implementation
         $adminSessionMock->expects($this->any())
             ->method('isAllowed')
-            ->will($this->returnCallback(
-                function($resource) use ($aclResources) {
-                    if ($aclResources === null) {
-                        return true;
-                    }
-                    if (strpos($resource, 'admin/') === 0) {
-                        $resource = substr($resource, strlen('admin/'));
-                    }
-                    return in_array($resource, $aclResources);
-                }));
+            ->will($this->returnCallback(static function ($resource) use ($aclResources) {
+                if ($aclResources === null) {
+                    return true;
+                }
 
+                if (str_starts_with($resource, 'admin/')) {
+                    $resource = substr($resource, strlen('admin/'));
+                }
 
+                return in_array($resource, $aclResources);
+            }));
 
         $this->replaceByMock('model', 'admin/session', $adminSessionMock);
 
         $this->getRequest()->setParam(
             Mage_Adminhtml_Model_Url::SECRET_KEY_PARAM_NAME,
-            Mage::getSingleton('adminhtml/url')->getSecretKey()
+            Mage::getSingleton('adminhtml/url')->getSecretKey(),
         );
 
         return $this;

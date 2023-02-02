@@ -16,11 +16,6 @@
  * @author     Ivan Chepurnyi <ivan.chepurnyi@ecomdev.org>
  */
 
-/**
- * Exception for failed constraints execution
- *
- *
- */
 class EcomDev_PHPUnit_Constraint_Exception extends \PHPUnit\Framework\AssertionFailedError
 {
     protected $diff = null;
@@ -36,7 +31,7 @@ class EcomDev_PHPUnit_Constraint_Exception extends \PHPUnit\Framework\AssertionF
             $diff = null;
         }
 
-        parent::__construct($description, $diff);
+        parent::__construct($description);
     }
 
     public function toString(): string
