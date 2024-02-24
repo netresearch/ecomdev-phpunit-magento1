@@ -1345,49 +1345,29 @@ abstract class EcomDev_PHPUnit_Test_Case_Controller extends EcomDev_PHPUnit_Test
         );
     }
 
-    /**
-     * Assert that layout block is placed after all expected ones
-     *
-     * @param string $blockName
-     * @param array $after
-     * @param string $message
-     */
-    public static function assertLayoutBlockAfterAll($blockName, array $after, $message = '')
+    public static function assertLayoutBlockAfterAll(string $blockName, array $after, string $message = '')
     {
-        $constaints = array();
+        $constraints = [];
         foreach ($after as $value) {
-            $constaints[] = self::layoutBlock(
+            $constraints[] = self::layoutBlock(
                 $blockName, EcomDev_PHPUnit_Constraint_Layout_Block::TYPE_AFTER, $value
             );
         }
 
-        $logicalAnd = new \PHPUnit\Framework\Constraint\LogicalAnd();
-        $logicalAnd->setConstraints($constaints);
-        self::assertThatLayout($logicalAnd, $message);
+        self::assertThatLayout(self::logicalAnd(...$constraints), $message);
     }
 
-    /**
-     * Assert that layout block is placed after all expected ones
-     *
-     * @param string $blockName
-     * @param array $after
-     * @param string $message
-     */
-    public static function assertLayoutBlockBeforeAll($blockName, array $before, $message = '')
+    public static function assertLayoutBlockBeforeAll(string $blockName, array $before, string $message = '')
     {
-        $constaints = array();
+        $constraints = [];
         foreach ($before as $value) {
-            $constaints[] = self::layoutBlock(
+            $constraints[] = self::layoutBlock(
                 $blockName, EcomDev_PHPUnit_Constraint_Layout_Block::TYPE_BEFORE, $value
             );
         }
 
-        $logicalAnd = new \PHPUnit\Framework\Constraint\LogicalAnd();
-        $logicalAnd->setConstraints($constaints);
-        self::assertThatLayout($logicalAnd, $message);
+        self::assertThatLayout(self::logicalAnd(...$constraints), $message);
     }
-
-
 
     /**
      * Assert that layout block type is on the root rendering level
@@ -1992,6 +1972,7 @@ abstract class EcomDev_PHPUnit_Test_Case_Controller extends EcomDev_PHPUnit_Test
 
         $this->getResponse()->reset();
         $this->getLayout()->reset();
+
         return $this;
     }
 
@@ -2006,7 +1987,7 @@ abstract class EcomDev_PHPUnit_Test_Case_Controller extends EcomDev_PHPUnit_Test
     protected function getUrlModel($route = null, array &$params)
     {
         if (!isset($params['_store'])) {
-            if (strpos($route, EcomDev_PHPUnit_Model_App::AREA_ADMINHTML) !== false) {
+            if (strpos((string)$route, EcomDev_PHPUnit_Model_App::AREA_ADMINHTML) !== false) {
                 $params['_store'] = EcomDev_PHPUnit_Model_App::ADMIN_STORE_CODE;
             } else {
                 $params['_store'] = $this->app()->getAnyStoreView()->getCode();

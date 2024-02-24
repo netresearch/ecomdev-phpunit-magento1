@@ -48,7 +48,7 @@ class EcomDev_PHPUnit_Test_Suite extends \PHPUnit\Framework\TestSuite
             new RuntimeException('Test Suite class should be extended from EcomDev_PHPUnit_Test_Suite_Group');
         }
 
-        $suite = new self('Magento Test Suite');
+        $suite = new static('Magento Test Suite');
 
         $excludedModules = Mage::getConfig()->getNode('phpunit/suite/exclude');
         
@@ -57,7 +57,7 @@ class EcomDev_PHPUnit_Test_Suite extends \PHPUnit\Framework\TestSuite
             foreach ($modules->children() as $module) {
                 $realModule = Mage::getConfig()->getNode('modules/' . $module->getName());
                 if (!$realModule || !$realModule->is('active')) {
-                    $suite->addTest(self::warning('There is no module with name: ' . $module->getName()));
+                    echo 'There is no module with name: ' . $module->getName();
                     continue;
                 }
                 
@@ -83,10 +83,6 @@ class EcomDev_PHPUnit_Test_Suite extends \PHPUnit\Framework\TestSuite
                     $suite->addTest($testSuiteClass->newInstance($className, $currentGroups));
                 }
             }
-        }
-
-        if (!$suite->count()) {
-            $suite->addTest(self::warning('There were no test cases for the current run'));
         }
 
         return $suite;

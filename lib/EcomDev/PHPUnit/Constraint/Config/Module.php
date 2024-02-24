@@ -18,10 +18,8 @@
 
 /**
  * Module configuration constraint
- *
  */
-class EcomDev_PHPUnit_Constraint_Config_Module
-    extends EcomDev_PHPUnit_Constraint_AbstractConfig
+class EcomDev_PHPUnit_Constraint_Config_Module extends EcomDev_PHPUnit_Constraint_AbstractConfig
 {
     const XML_PATH_MODULE_NODE = 'modules/%s';
 
@@ -32,22 +30,14 @@ class EcomDev_PHPUnit_Constraint_Config_Module
     const TYPE_LESS_THAN_VERSION = 'version_less_than';
     const TYPE_GREATER_THAN_VERSION = 'version_greater_than';
 
-    /**
-     * Name of the module for constraint
-     *
-     * @var string
-     */
-    protected $_moduleName = null;
+    protected ?string $_moduleName = null;
 
     /**
      * Constraint for evaluation of module config node
      *
-     * @param string $moduleName
-     * @param string $type
-     * @param mixed $expectedValue
      * @internal param string $nodePath
      */
-    public function __construct($moduleName, $type, $expectedValue)
+    public function __construct(string $moduleName, string $type, mixed $expectedValue)
     {
         $this->_expectedValueValidation += array(
             self::TYPE_CODE_POOL => array(true, 'is_string', 'string'),
@@ -71,132 +61,66 @@ class EcomDev_PHPUnit_Constraint_Config_Module
         $this->_moduleName = $moduleName;
     }
 
-    /**
-     * Evaluates module is active
-     *
-     * @param Varien_Simplexml_Element $other
-     * @return boolean
-     */
-    protected function evaluateIsActive($other)
+    protected function evaluateIsActive(Varien_Simplexml_Element $other): bool
     {
         return $other->is('active');
     }
 
-    /**
-     * Text representation of module is active constraint
-     *
-     * @return string
-     */
-    protected function textIsActive()
+    protected function textIsActive(): string
     {
         return 'is active';
     }
 
-    /**
-     * Evaluates module code pool
-     *
-     * @param Varien_Simplexml_Element $other
-     * @return boolean
-     */
-    protected function evaluateCodePool($other)
+    protected function evaluateCodePool(Varien_Simplexml_Element $other): bool
     {
         return $this->compareValues($this->_expectedValue, (string)$other->codePool);
     }
 
-    /**
-     * Text representation of module is active constraint
-     *
-     * @return string
-     */
-    protected function textCodePool()
+    protected function textCodePool(): string
     {
         return sprintf('is placed in %s code pool', $this->_expectedValue);
     }
 
-    /**
-     * Evaluates module is dependent on expected one
-     *
-     * @param Varien_Simplexml_Element $other
-     * @return boolean
-     */
-    protected function evaluateDepends($other)
+    protected function evaluateDepends(Varien_Simplexml_Element $other): bool
     {
-        if (!isset($other->depends) || !$other->depends->hasChildren()) {
+        if (! isset($other->depends) || ! $other->depends->hasChildren()) {
             return false;
         }
 
         return isset($other->depends->{$this->_expectedValue});
     }
 
-    /**
-     * Text representation of module dependance
-     *
-     * @return string
-     */
-    protected function textDepends()
+    protected function textDepends(): string
     {
         return sprintf('is dependent on %s module', $this->_expectedValue);
     }
 
-    /**
-     * Evaluates module version is equal to expected
-     *
-     * @param Varien_Simplexml_Element $other
-     * @return boolean
-     */
-    protected function evaluateVersion($other)
+    protected function evaluateVersion(Varien_Simplexml_Element $other): bool
     {
         return $this->compareVersion($other, '=');
     }
 
-    /**
-     * Text representation of module version check
-     *
-     * @return string
-     */
-    protected function textVersion()
+    protected function textVersion(): string
     {
-        return sprintf('version is equal to %s', $this->_expectedValue);
+        return sprintf('version is equal to %s', $this->_actualValue);
     }
 
-    /**
-     * Evaluates module version is less than expected
-     *
-     * @param Varien_Simplexml_Element $other
-     * @return boolean
-     */
-    protected function evaluateVersionLessThan($other)
+    protected function evaluateVersionLessThan(Varien_Simplexml_Element $other): bool
     {
         return $this->compareVersion($other, '<');
     }
 
-    /**
-     * Text representation of module version check
-     *
-     * @return string
-     */
-    protected function textVersionLessThan()
+    protected function textVersionLessThan(): string
     {
         return sprintf('version is less than %s', $this->_expectedValue);
     }
 
-    /**
-     * Evaluates module version is greater than expected
-     *
-     * @param Varien_Simplexml_Element $other
-     * @return boolean
-     */
-    protected function evaluateVersionGreaterThan($other)
+    protected function evaluateVersionGreaterThan(Varien_Simplexml_Element $other): bool
     {
         return $this->compareVersion($other, '>');
     }
 
-    /**
-     * Text representation of module version check
-     *
-     * @return string
-     */
-    protected function textVersionGreaterThan()
+    protected function textVersionGreaterThan(): string
     {
         return sprintf('version is greater than %s', $this->_expectedValue);
     }

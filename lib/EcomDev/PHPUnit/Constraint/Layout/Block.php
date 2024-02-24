@@ -177,15 +177,16 @@ class EcomDev_PHPUnit_Constraint_Layout_Block extends EcomDev_PHPUnit_Constraint
 
     /**
      * Evaluates that layout block was placed after expected one
-     *
-     * @param EcomDev_PHPUnit_Constraint_Layout_LoggerInterface $other
-     * @return boolean
      */
-    protected function evaluateAfter($other)
+    protected function evaluateAfter(EcomDev_PHPUnit_Constraint_Layout_LoggerInterface $other): bool
     {
+        // blockName = block to be placed after
+        // expectedValue = block to be placed before
         $positionInfo = $other->getBlockPosition($this->_blockName);
-        $this->setActualValue($positionInfo['after']);
-        return  in_array($this->_expectedValue, $this->_actualValue);
+        $this->setActualValue($positionInfo['before']);
+
+        // assure that expected block is contained in the array of blocks positioned **before** the inspected block
+        return in_array($this->_expectedValue, $this->_actualValue);
     }
 
     /**
@@ -200,15 +201,16 @@ class EcomDev_PHPUnit_Constraint_Layout_Block extends EcomDev_PHPUnit_Constraint
 
     /**
      * Evaluates that layout block was placed before expected one
-     *
-     * @param EcomDev_PHPUnit_Constraint_Layout_LoggerInterface $other
-     * @return boolean
      */
-    protected function evaluateBefore($other)
+    protected function evaluateBefore(EcomDev_PHPUnit_Constraint_Layout_LoggerInterface $other): bool
     {
+        // blockName = block to be placed after
+        // expectedValue = block to be placed before
         $positionInfo = $other->getBlockPosition($this->_blockName);
-        $this->setActualValue($positionInfo['before']);
-        return  in_array($this->_expectedValue, $this->_actualValue);
+        $this->setActualValue($positionInfo['after']);
+
+        // assure that expected block is contained in the array of blocks positioned **after** the inspected block
+        return in_array($this->_expectedValue, $this->_actualValue);
     }
 
     /**

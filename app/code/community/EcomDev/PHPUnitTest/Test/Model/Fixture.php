@@ -1,13 +1,13 @@
 <?php
+
 /**
  * @loadSharedFixture testFixtureArrayMerge.yaml
  */
 class EcomDev_PHPUnitTest_Test_Model_Fixture extends EcomDev_PHPUnit_Test_Case
 {
-
-    public function testFixtureArrayMerge()
+    public function testFixtureArrayMerge(): void
     {
-        require_once($this->_getVfsUrl('app/code/community/EcomDev/PHPUnit/Test/Model/ExampleClass.php'));
+        require_once $this->_getVfsUrl('app/code/community/EcomDev/PHPUnit/Test/Model/ExampleClass.php');
 
         $testCase = new EcomDev_PHPUnitTest_Test_Model_ExampleClass();
         $testCase->setName('testLoadFixtureOrder');
@@ -16,9 +16,9 @@ class EcomDev_PHPUnitTest_Test_Model_Fixture extends EcomDev_PHPUnit_Test_Case
         $this->getFixture()->apply();
     }
 
-    public function testLoadClassBeforeMethodFixtures()
+    public function testLoadClassBeforeMethodFixtures(): void
     {
-        require_once($this->_getVfsUrl('app/code/community/EcomDev/PHPUnit/Test/Model/ExampleClass.php'));
+        require_once $this->_getVfsUrl('app/code/community/EcomDev/PHPUnit/Test/Model/ExampleClass.php');
 
         $testCase = new EcomDev_PHPUnitTest_Test_Model_ExampleClass();
         $testCase->setName('testLoadFixtureOrder');
@@ -28,10 +28,8 @@ class EcomDev_PHPUnitTest_Test_Model_Fixture extends EcomDev_PHPUnit_Test_Case
         $this->assertEquals('methodFixtureValue', Mage::getStoreConfig('sample/path'));
     }
 
-    protected function _getVfsUrl($path)
+    protected function _getVfsUrl($path): string
     {
         return $this->getFixture()->getVfs()->url($path);
     }
-
-
 }

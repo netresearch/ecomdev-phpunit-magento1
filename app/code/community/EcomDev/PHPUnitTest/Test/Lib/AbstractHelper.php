@@ -18,28 +18,18 @@
 
 class EcomDev_PHPUnitTest_Test_Lib_AbstractHelper extends \PHPUnit\Framework\TestCase
 {
-    /**
-     *
-     *
-     * @var EcomDev_PHPUnit_AbstractHelper|\PHPUnit\Framework\MockObject\MockObject
-     */
+    /** @var EcomDev_PHPUnit_AbstractHelper|\PHPUnit\Framework\MockObject\MockObject */
     protected $helper = null;
 
-    protected function setUp():void
+    protected function setUp(): void
     {
         $this->helper = $this->getMockBuilder('EcomDev_PHPUnit_AbstractHelper')
-            ->setMethods(array('hasMethod', 'callMethod'))
+            ->setMethods(['hasMethod', 'callMethod'])
             ->enableArgumentCloning()
             ->getMockForAbstractClass();
     }
 
-    /**
-     * Creates stub for phpunit method
-     *
-     * @param $map
-     * @return $this
-     */
-    protected function hasMethodStub($map)
+    protected function hasMethodStub($map): self
     {
         $stubMap = array();
         $stubResult = array();
@@ -66,37 +56,37 @@ class EcomDev_PHPUnitTest_Test_Lib_AbstractHelper extends \PHPUnit\Framework\Tes
         return $this;
     }
 
-    public function testHasAction()
+    public function testHasAction(): void
     {
-        $this->hasMethodStub(array(
+        $this->hasMethodStub([
             'helperName' => true,
             'helperCamelName' => true,
-            'helperUnknownName' => false
-        ));
+            'helperUnknownName' => false,
+        ]);
 
         $this->assertTrue($this->helper->has('name'));
         $this->assertTrue($this->helper->has('camelName'));
         $this->assertFalse($this->helper->has('unknownName'));
     }
 
-    public function testInvokeAction()
+    public function testInvokeAction(): void
     {
-        $this->hasMethodStub(array(
+        $this->hasMethodStub([
             'helperName' => $this->returnArgument(0),
             'helperCamelName' => $this->returnArgument(1),
-            'helperUnknownName' => false
-        ));
+            'helperUnknownName' => false,
+        ]);
 
-        $this->assertSame('value1', $this->helper->invoke('name', array('value1', 'value2')));
-        $this->assertSame('value2', $this->helper->invoke('camelName', array('value1', 'value2')));
+        $this->assertSame('value1', $this->helper->invoke('name', ['value1', 'value2']));
+        $this->assertSame('value2', $this->helper->invoke('camelName', ['value1', 'value2']));
 
         $this->expectException(RuntimeException::class);
         $this->expectExceptionMessage('Helper "unknownName" is not invokable.');
         $this->helper->invoke('unknownName', array());
     }
 
-    public function testSetTestCase()
+    public function testSetTestCase(): void
     {
-        $this->assertObjectHasAttribute('testCase', $this->helper);
+        $this->assertObjectHasProperty('testCase', $this->helper);
     }
 }
