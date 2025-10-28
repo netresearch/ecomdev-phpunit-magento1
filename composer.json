@@ -24,8 +24,5 @@
         "allow-plugins": {
             "magento-hackathon/magento-composer-installer": true
         }
-    },
-    "extra": {
-        "magento-root-dir": "root"
     }
 }
