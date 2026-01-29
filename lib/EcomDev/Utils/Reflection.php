@@ -48,7 +48,6 @@ class EcomDev_Utils_Reflection
         }
 
         $reflectionProperty = $reflectionObject->getProperty($property);
-        $reflectionProperty->setAccessible(true);
         $reflectionProperty->setValue((is_string($object) ? null : $object), $value);
     }
 
@@ -95,7 +94,6 @@ class EcomDev_Utils_Reflection
         }
         
         $reflectionProperty = $reflectionObject->getProperty($property);
-        $reflectionProperty->setAccessible(true);
         return $reflectionProperty->getValue((is_string($object) ? null : $object));
     }
 
@@ -117,7 +115,6 @@ class EcomDev_Utils_Reflection
 
         $reflectionObject = self::getReflection($object);
         $reflectionMethod = $reflectionObject->getMethod($method);
-        $reflectionMethod->setAccessible(true);
 
         if (!empty($args)) {
             return $reflectionMethod->invokeArgs((is_string($object) ? null : $object), $args);
