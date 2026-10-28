@@ -441,11 +441,6 @@ class EcomDev_PHPUnit_Test_Case_Util
             throw EcomDev_PHPUnit_Helper::createInvalidArgumentException(1, '\PHPUnit\Framework\MockObject\MockObject');
         }
 
-        // Remove addition of /data suffix if version is more than 1.6.x
-        if (version_compare(Mage::getVersion(), '1.6.0.0', '<') && $type == 'helper' && strpos($classAlias, '/') === false) {
-            $classAlias .= '/data';
-        }
-
         if (in_array($type, array('model', 'resource_model'))) {
             self::app()->getConfig()->replaceInstanceCreation($type, $classAlias, $mock);
             $type = str_replace('model', 'singleton', $type);
