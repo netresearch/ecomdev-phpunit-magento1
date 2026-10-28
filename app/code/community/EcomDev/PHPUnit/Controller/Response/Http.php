@@ -87,7 +87,7 @@ class EcomDev_PHPUnit_Controller_Response_Http
         $this->canSendHeaders(true);
         $this->_sentHeaders= array();
 
-        $this->_sentHeaders[null] = 'HTTP/1.1 ' . $this->_httpResponseCode;
+        $this->_sentHeaders[''] = 'HTTP/1.1 ' . $this->_httpResponseCode;
 
         foreach ($this->_headersRaw as $headerRaw) {
             if (strpos($headerRaw, ':') === false) { continue; }
